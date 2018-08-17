@@ -65,6 +65,8 @@ namespace billiards
       glLineWidth(1);
 
       glEnable(GL_MULTISAMPLE);
+
+      glClearColor(0.2f, 0.4f, 0.3f, 1.0f);
     }
 
     Window::~Window()
