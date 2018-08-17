@@ -9,19 +9,19 @@
 #include "AttribBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "Mat4.h"
 
 int main()
 {
   using namespace billiards;
   using namespace graphics;
+  using namespace math;
 
   Window window;
 
   ShaderProgram shaderProgram("src/shaders/basic_vertex.glsl", "src/shaders/basic_fragment.glsl");
-  glm::mat4 projMatrix = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f);
-  shaderProgram.setUniformMat4f("u_projMatrix", &projMatrix[0][0]); // @suppress("Invalid arguments")
+  Mat4 projMatrix = Mat4::ortho(0.0f, 800.0f, 0.0f, 800.0f);
+  shaderProgram.setUniformMat4f("u_projMatrix", &projMatrix.elements[0]); // @suppress("Invalid arguments")
 
   GLfloat positions[] =
   {
