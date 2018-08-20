@@ -20,6 +20,7 @@ namespace billiards { namespace graphics {
 
   IndexBuffer::~IndexBuffer()
   {
+    glDeleteBuffers(1, &ID);
   }
 
   void IndexBuffer::bind() const

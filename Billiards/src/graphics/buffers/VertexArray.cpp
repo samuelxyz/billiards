@@ -21,6 +21,7 @@ namespace billiards
 
     VertexArray::~VertexArray()
     {
+      glDeleteVertexArrays(1, &ID);
     }
 
     void VertexArray::addBuffer(AttribBuffer& buffer, ShaderProgram& relevantProgram, const char* attribName)

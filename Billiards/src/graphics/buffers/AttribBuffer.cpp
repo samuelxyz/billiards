@@ -24,7 +24,7 @@ namespace billiards
 
     AttribBuffer::~AttribBuffer()
     {
-      // TODO Auto-generated destructor stub
+      glDeleteBuffers(1, &ID);
     }
 
     void AttribBuffer::bind() const
