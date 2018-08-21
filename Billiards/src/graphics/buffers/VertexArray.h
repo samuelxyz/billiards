@@ -21,7 +21,7 @@ namespace billiards { namespace graphics {
       VertexArray();
       virtual ~VertexArray();
 
-      void addBuffer(AttribBuffer& buffer, ShaderProgram& relevantProgram, const char* attribName);
+      void addBuffer(const AttribBuffer& buffer, const ShaderProgram& relevantProgram, const char* attribName);
       virtual void bind() const override;
       virtual void unbind() const override;
   };

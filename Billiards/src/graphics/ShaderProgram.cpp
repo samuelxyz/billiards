@@ -62,7 +62,7 @@ namespace billiards { namespace graphics {
   }
 
     void ShaderProgram::setUniformMat4f(const char* uniformName,
-        GLfloat* matrixBegin)
+        GLfloat* matrixBegin) const
     {
       bind();
       glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, matrixBegin);
@@ -71,39 +71,39 @@ namespace billiards { namespace graphics {
   GLuint ShaderProgram::compileShader(GLenum type, const std::string& source)
   {
     GLuint shader = glCreateShader(type);
-        const char* src = source.c_str();
-        glShaderSource(shader, 1, &src, nullptr);
-        glCompileShader(shader);
+    const char* src = source.c_str();
+    glShaderSource(shader, 1, &src, nullptr);
+    glCompileShader(shader);
 
-        // error handling
-        int compileSuccess;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &compileSuccess);
-        if (compileSuccess == GL_FALSE)
-        {
-          int length;
-          glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+    // error handling
+    int compileSuccess;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileSuccess);
+    if (compileSuccess == GL_FALSE)
+    {
+      int length;
+      glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
 
-          char* msg = new char[length];
-          glGetShaderInfoLog(shader, length, &length, msg);
-          std::cerr << "Failed to compile " << ((type == GL_VERTEX_SHADER) ?
-              "vertex" : "fragment") << " shader!" << std::endl;
-          std::cerr << msg << std::endl;
+      char* msg = new char[length];
+      glGetShaderInfoLog(shader, length, &length, msg);
+      std::cerr << "Failed to compile " << ((type == GL_VERTEX_SHADER) ?
+          "vertex" : "fragment") << " shader!" << std::endl;
+      std::cerr << msg << std::endl;
 
-          delete msg;
+      delete msg;
 
-          glDeleteShader(shader);
-          return 0;
-        }
+      glDeleteShader(shader);
+      return 0;
+    }
 
-        return shader;
+    return shader;
   }
 
-    GLint ShaderProgram::getAttribLocation(const char* attribName)
+    GLint ShaderProgram::getAttribLocation(const char* attribName) const
     {
       return glGetAttribLocation(ID, attribName);
     }
 
-    GLint ShaderProgram::getUniformLocation(const std::string& uniformName)
+    GLint ShaderProgram::getUniformLocation(const std::string& uniformName) const
     {
       auto cachedLoc = uniformCache.find(uniformName);
 

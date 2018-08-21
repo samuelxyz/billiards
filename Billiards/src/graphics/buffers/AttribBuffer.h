@@ -15,16 +15,18 @@ namespace billiards { namespace graphics {
   class AttribBuffer: public GLObject
   {
     private:
-      GLuint numAttribComponents;
+      unsigned int numAttribComponents;
 
     public:
-      AttribBuffer(GLfloat* data, GLuint numAttribComponents, GLsizei attribCount, GLenum usage);
+      AttribBuffer(GLfloat* data, unsigned int numAttribComponents, unsigned int attribCount, GLenum usage);
       virtual ~AttribBuffer();
 
       virtual void bind() const override;
       virtual void unbind() const override;
 
-      GLuint getNumAttribComponents() const { return numAttribComponents; }
+      void write(GLfloat* data, unsigned int attribCount) const;
+
+      unsigned int getNumAttribComponents() const { return numAttribComponents; }
   };
 
 } /* namespace graphics */

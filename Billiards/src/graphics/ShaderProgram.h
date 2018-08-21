@@ -17,7 +17,7 @@ namespace billiards { namespace graphics {
   class ShaderProgram: public GLObject
   {
     private:
-      std::unordered_map<std::string, GLint> uniformCache;
+      mutable std::unordered_map<std::string, GLint> uniformCache;
 
     public:
       ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath);
@@ -26,13 +26,13 @@ namespace billiards { namespace graphics {
       virtual void bind() const;
       virtual void unbind() const;
 
-      GLint getAttribLocation(const char* attribName);
-      void setUniformMat4f(const char* uniformName, GLfloat* matrixBegin);
+      GLint getAttribLocation(const char* attribName) const;
+      void setUniformMat4f(const char* uniformName, GLfloat* matrixBegin) const;
 
     private:
-      std::string loadFile(const std::string& filepath);
-      GLuint compileShader(GLenum type, const std::string& source);
-      GLint getUniformLocation(const std::string& uniformName);
+      static std::string loadFile(const std::string& filepath);
+      static GLuint compileShader(GLenum type, const std::string& source);
+      GLint getUniformLocation(const std::string& uniformName) const;
   };
 
 } /* namespace graphics */

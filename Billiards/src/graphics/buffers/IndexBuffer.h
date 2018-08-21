@@ -18,11 +18,13 @@ namespace billiards { namespace graphics {
       GLsizei indexCount;
 
     public:
-      IndexBuffer(GLuint* data, GLsizei indexCount, GLenum usage);
+      IndexBuffer(GLuint* data, unsigned int indexCount, GLenum usage);
       virtual ~IndexBuffer();
 
       virtual void bind() const override;
       virtual void unbind() const override;
+
+      void write(GLuint* data, unsigned int indexCount) const;
   };
 
 } /* namespace graphics */
