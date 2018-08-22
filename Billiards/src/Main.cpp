@@ -5,17 +5,16 @@
  *      Author: Samuel Tan
  */
 
-#include "entity/Ball.h"
+#include <Ball.h>
 #include <FanBatchRenderer.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <Mat4.h>
 #include <ShaderProgram.h>
-#include <Vec3.h>
+#include <Table.h>
+#include <Vec2.h>
 #include <Vec4.h>
-#include <Vertex.h>
 #include <Window.h>
-#include <vector>
 
 int main()
 {
@@ -55,17 +54,19 @@ int main()
 #endif
 
   FanBatchRenderer fbr(shaderProgram);
-  entity::Ball ball(math::Vec2(400, 400), 30.0f, math::Vec4(1.0f, 0.8f, 0.6f, 1.0f));
+  gameplay::Table table;
+  table.add(new entity::Ball(table, math::Vec2(400, 400), math::Vec2(), 30.0f, 10.0f, math::Vec4(1.0f, 0.8f, 0.6f, 1.0f)));
+  table.add(new entity::Ball(table, math::Vec2(100, 420), math::Vec2(2.0f, -2.0f/30), 40.0f, 60.0f, math::Vec4(0.6f, 1.0f, 0.5f, 1.0f)));
+  table.add(new entity::Ball(table, math::Vec2(400, 200), math::Vec2(0.5f, 3.0f), 30.0f, 20.0f, math::Vec4(0.3f, 0.6f, 0.8f, 1.0f)));
 
   while (!window.shouldClose())
   {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    ball.render(fbr);
+    table.update();
+    table.render(fbr);
 
     fbr.flush();
-
-//    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     window.swapBuffers();
     glfwPollEvents();

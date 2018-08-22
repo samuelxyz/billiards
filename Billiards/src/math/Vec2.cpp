@@ -38,6 +38,11 @@ namespace billiards { namespace math {
     return Vec2(v.x * d, v.y * d);
   }
 
+  Vec2 operator/(const Vec2& v, float d)
+  {
+    return 1/d * v;
+  }
+
   Vec2& Vec2::operator+=(const Vec2& rhs)
   {
     x += rhs.x;
@@ -113,8 +118,8 @@ namespace billiards { namespace math {
   {
     float oldX = x;
     float oldY = y;
-    double cosa = cos(static_cast<double>(angle));
-    double sina = sin(static_cast<double>(angle));
+    double cosa = std::cos(static_cast<double>(angle));
+    double sina = std::sin(static_cast<double>(angle));
 
     x = static_cast<float>(cosa * oldX - sina * oldY);
     y = static_cast<float>(sina * oldX + cosa * oldY);

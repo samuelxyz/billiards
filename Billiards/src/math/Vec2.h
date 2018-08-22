@@ -23,6 +23,7 @@ namespace billiards { namespace math {
       friend Vec2 operator-(const Vec2& v1, const Vec2& v2);
       friend Vec2 operator*(const Vec2& v, float d);
       friend Vec2 operator*(float d, const Vec2& v);
+      friend Vec2 operator/(const Vec2& v, float d);
 
       Vec2& operator+=(const Vec2& rhs);
       Vec2& operator-=(const Vec2& rhs);
