@@ -6,6 +6,7 @@
  */
 
 #include "Window.h"
+#include <Constants.h>
 #include <cassert>
 #include <iostream>
 
@@ -25,7 +26,10 @@ namespace billiards { namespace graphics {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     /* Create a windowed mode window and its OpenGL context */
-    glfwWindow = glfwCreateWindow(800, 800, "Billiards", nullptr, nullptr);
+    glfwWindow = glfwCreateWindow(
+        Constants::TABLE_PANE_WIDTH, Constants::TABLE_PANE_HEIGHT,
+        "Billiards", nullptr, nullptr);
+
     if (!glfwWindow)
     {
       glfwTerminate();

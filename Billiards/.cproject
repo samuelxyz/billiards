@@ -63,7 +63,8 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="graphics|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="math|vendor|graphics" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="entity|math|vendor|graphics" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/entity"/>
 						<entry excluding="buffers" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/graphics"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/graphics/buffers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/math"/>
@@ -137,7 +138,8 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="graphics|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="math|vendor|graphics" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="entity|math|vendor|graphics" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/entity"/>
 						<entry excluding="buffers" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/graphics"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/graphics/buffers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/math"/>

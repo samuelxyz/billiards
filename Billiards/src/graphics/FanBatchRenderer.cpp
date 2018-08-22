@@ -75,11 +75,12 @@ namespace billiards { namespace graphics {
     posBuffer.write(positions, iVertices);
     colorBuffer.write(colors, iVertices);
     indexBuffer.write(indices, iIndices);
-    indexBuffer.bind();
 
 //    // these will be necessary if ever using multiple renderers - consider unbinds too
 //    shaderProgram.bind();
 //    vertexArray.bind();
+
+    indexBuffer.bind();
     glDrawElements(GL_TRIANGLE_FAN, iIndices, GL_UNSIGNED_INT, (void*) 0);
 
     iVertices = 0;

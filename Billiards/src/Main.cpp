@@ -5,12 +5,17 @@
  *      Author: Samuel Tan
  */
 
-#include "Window.h"
-#include "AttribBuffer.h"
-#include "VertexArray.h"
-#include "ShaderProgram.h"
-#include "FanBatchRenderer.h"
-#include "Mat4.h"
+#include "entity/Ball.h"
+#include <FanBatchRenderer.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <Mat4.h>
+#include <ShaderProgram.h>
+#include <Vec3.h>
+#include <Vec4.h>
+#include <Vertex.h>
+#include <Window.h>
+#include <vector>
 
 int main()
 {
@@ -50,20 +55,13 @@ int main()
 #endif
 
   FanBatchRenderer fbr(shaderProgram);
+  entity::Ball ball(math::Vec2(400, 400), 30.0f, math::Vec4(1.0f, 0.8f, 0.6f, 1.0f));
 
   while (!window.shouldClose())
   {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    Vertex top   { Vec3(400.0f, 600.0f), Vec4(0.0f, 1.0f, 0.0f, 1.0f) };
-    Vertex left  { Vec3(166.7f, 200.0f), Vec4(1.0f, 0.0f, 0.0f, 1.0f) };
-    Vertex right { Vec3(633.3f, 200.0f), Vec4(0.0f, 0.0f, 1.0f, 1.0f) };
-
-    Fan triangle;
-    triangle.push_back(top);
-    triangle.push_back(left);
-    triangle.push_back(right);
-    fbr.submit(triangle);
+    ball.render(fbr);
 
     fbr.flush();
 
