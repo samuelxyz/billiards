@@ -58,6 +58,20 @@ namespace billiards { namespace entity {
   void Ball::accelerate()
   {
     velocity += table.getStats().gravity;
+
+    // rolling friction
+    if (!velocity.isZero())
+    {
+      // friction impulse is proportional to mass so
+      // we'll just handle delta-v instead of bothering
+      math::Vec2 frictionDV(-velocity);
+      frictionDV.scaleTo(table.getStats().friction *
+          ROLLING_FRICTION_RATIO);
+      if (frictionDV > velocity)
+        velocity = math::Vec2();
+      else
+        velocity += frictionDV;
+    }
   }
 
   void Ball::move()
@@ -148,6 +162,7 @@ namespace billiards { namespace entity {
       math::Vec2 clampedFinalDV(finalDV);
       clampedFinalDV.scaleTo(dv.getLength());
       dp.scaleTo((dv - clampedFinalDV).getLength() * (mass * other.mass / totalMass));
+      dp *= (1 + table.getStats().bounciness) / 2;
     }
 
     // apply impulses

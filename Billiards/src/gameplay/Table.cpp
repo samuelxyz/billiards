@@ -11,7 +11,7 @@
 namespace billiards { namespace gameplay {
 
   Table::Table()
-  : stats { Constants::TABLE_PANE_WIDTH, Constants::TABLE_PANE_HEIGHT, math::Vec2(), 0.0f, 0.5f },
+  : stats { Constants::TABLE_PANE_WIDTH, Constants::TABLE_PANE_HEIGHT, math::Vec2(), 0.2f, 0.5f },
     ballList()
   {
   }

@@ -25,6 +25,7 @@ namespace billiards { namespace entity {
       math::Vec2 position, velocity;
       float radius, mass;
       math::Vec4 color;
+      static constexpr float ROLLING_FRICTION_RATIO = 0.01;
 
     public:
       Ball(gameplay::Table& table,
