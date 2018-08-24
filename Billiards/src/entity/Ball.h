@@ -8,23 +8,21 @@
 #ifndef BALL_H_
 #define BALL_H_
 
-#include <FanBatchRenderer.h>
-#include <Vec2.h>
+#include <Table.h>
 #include <Vec4.h>
-
-namespace billiards { namespace gameplay {
-  class Table;
-} }
 
 namespace billiards { namespace entity {
 
   class Ball
   {
+      friend class gameplay::Table;
+
     protected:
       gameplay::Table& table;
       math::Vec2 position, velocity;
       float radius, mass;
       math::Vec4 color;
+      bool beingDragged;
       static constexpr float ROLLING_FRICTION_RATIO = 0.01;
 
     public:
@@ -35,6 +33,8 @@ namespace billiards { namespace entity {
 
       virtual void render(graphics::FanBatchRenderer& renderer);
       virtual void update();
+
+      bool containsPoint(const math::Vec2& point);
 
     protected:
       void accelerate();

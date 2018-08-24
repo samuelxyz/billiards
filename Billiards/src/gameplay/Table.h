@@ -8,9 +8,22 @@
 #ifndef TABLE_H_
 #define TABLE_H_
 
-#include <entity/Ball.h>
+#include <FanBatchRenderer.h>
 #include <Vec2.h>
 #include <forward_list>
+
+namespace billiards
+{
+  namespace graphics
+  {
+    class Window;
+  } /* namespace graphics */
+
+  namespace entity
+  {
+    class Ball;
+  }
+} /* namespace billiards */
 
 namespace billiards { namespace gameplay {
 
@@ -25,13 +38,17 @@ namespace billiards { namespace gameplay {
       };
 
     private:
+      const graphics::Window& window;
       Stats stats;
 
       // dynamic allocation
       std::forward_list<entity::Ball*> ballList;
 
+      entity::Ball* dragging;
+      math::Vec2 previousMousePos;
+
     public:
-      Table();
+      Table(const graphics::Window& window);
       virtual ~Table();
 
       const Stats& getStats() const { return stats; }
@@ -44,6 +61,11 @@ namespace billiards { namespace gameplay {
       void destroy(entity::Ball* ball);
       void clear();
 
+      void handleMouseButton(int button, int action);
+
+    private:
+      void checkDrag();
+      void drag(entity::Ball* ball);
   };
 
 } /* namespace gameplay */

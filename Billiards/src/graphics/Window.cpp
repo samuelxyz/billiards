@@ -5,8 +5,11 @@
  *      Author: Samuel Tan
  */
 
-#include "Window.h"
+#include <Window.h>
+
 #include <Constants.h>
+#include <Vec2.h>
+#include <Table.h>
 #include <cassert>
 #include <iostream>
 
@@ -111,13 +114,37 @@ namespace billiards { namespace graphics {
   void Window::handleMouseButton(GLFWwindow* glfwWindow, int button, int action,
       int mods)
   {
-    if (action == GLFW_PRESS)
-    {
-      double x, y;
-      glfwGetCursorPos(glfwWindow, &x, &y);
+    Window* window = getWindow(glfwWindow);
 
-      std::cout << "Mouse pressed! (" << x << ", " << y << ")" << std::endl;
-    }
+//    if (action == GLFW_PRESS)
+//    {
+//      std::cout << "Mouse pressed! " << window->getMousePos() << std::endl;
+//    }
+//    else if (action == GLFW_RELEASE)
+//    {
+//      std::cout << "Mouse released!" << std::endl;
+//    }
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && window->table)
+      window->table->handleMouseButton(button, action);
+  }
+
+  math::Vec2 Window::getMousePos() const
+  {
+    double x, y;
+    glfwGetCursorPos(glfwWindow, &x, &y);
+    y = Constants::TABLE_PANE_HEIGHT - y;
+    return math::Vec2(x, y);
+  }
+
+  void Window::bindTable(gameplay::Table* table)
+  {
+    this->table = table;
+  }
+
+  Window* Window::getWindow(GLFWwindow* glfwWindow)
+  {
+    return (Window*)glfwGetWindowUserPointer(glfwWindow);
   }
 
 } /* namespace graphics */

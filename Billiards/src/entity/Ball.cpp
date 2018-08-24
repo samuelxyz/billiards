@@ -20,7 +20,7 @@ namespace billiards { namespace entity {
       const math::Vec2& position, const math::Vec2& velocity,
       float radius, float mass, const math::Vec4& color)
   : table(table), position(position), velocity(velocity),
-    radius(radius), mass(mass), color(color)
+    radius(radius), mass(mass), color(color), beingDragged(false)
   {
   }
 
@@ -49,10 +49,18 @@ namespace billiards { namespace entity {
 
   void Ball::update()
   {
-    accelerate();
-    move();
+    if (!beingDragged)
+    {
+      accelerate();
+      move();
+    }
     collide();
     contain();
+  }
+
+  bool Ball::containsPoint(const math::Vec2& point)
+  {
+    return (point - position).getLength() <= radius;
   }
 
   void Ball::accelerate()
