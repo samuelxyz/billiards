@@ -44,8 +44,11 @@ namespace billiards { namespace gameplay {
       // dynamic allocation
       std::forward_list<entity::Ball*> ballList;
 
-      entity::Ball* dragging;
-      math::Vec2 previousMousePos;
+      struct
+      {
+          entity::Ball* target;
+          math::Vec2 previousMousePos, idealBallOffset;
+      } dragging;
 
     public:
       Table(const graphics::Window& window);

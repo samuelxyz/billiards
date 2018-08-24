@@ -116,15 +116,6 @@ namespace billiards { namespace graphics {
   {
     Window* window = getWindow(glfwWindow);
 
-//    if (action == GLFW_PRESS)
-//    {
-//      std::cout << "Mouse pressed! " << window->getMousePos() << std::endl;
-//    }
-//    else if (action == GLFW_RELEASE)
-//    {
-//      std::cout << "Mouse released!" << std::endl;
-//    }
-
     if (button == GLFW_MOUSE_BUTTON_LEFT && window->table)
       window->table->handleMouseButton(button, action);
   }

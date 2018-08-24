@@ -17,8 +17,7 @@ namespace billiards { namespace gameplay {
   : window(window),
     stats { Constants::TABLE_PANE_WIDTH, Constants::TABLE_PANE_HEIGHT, math::Vec2(), 0.2f, 0.5f },
     ballList(),
-    dragging(nullptr),
-    previousMousePos()
+    dragging { nullptr, math::Vec2(), math::Vec2() }
   {
   }
 
@@ -62,42 +61,47 @@ namespace billiards { namespace gameplay {
 
   void Table::handleMouseButton(int button, int action)
   {
-    if (action == GLFW_PRESS && dragging == nullptr)
+    if (action == GLFW_PRESS && dragging.target == nullptr)
     {
       math::Vec2 clickPos = window.getMousePos();
       for (entity::Ball* b : ballList)
       {
         if (b->containsPoint(clickPos))
         {
-          previousMousePos = clickPos;
-          dragging = b;
+          dragging.previousMousePos = clickPos;
+          dragging.idealBallOffset = b->position - clickPos;
+          dragging.target = b;
           b->beingDragged = true;
           break;
         }
       }
     }
 
-    else if (action == GLFW_RELEASE && dragging != nullptr)
+    else if (action == GLFW_RELEASE && dragging.target != nullptr)
     {
-      dragging->beingDragged = false;
-      dragging = nullptr;
+      dragging.target->beingDragged = false;
+      dragging.target = nullptr;
     }
   }
 
   void Table::checkDrag()
   {
-    if (dragging)
-    {
-      drag(dragging);
-      previousMousePos = window.getMousePos();
-    }
+    if (dragging.target)
+      drag(dragging.target);
   }
 
   void Table::drag(entity::Ball* ball)
   {
-    math::Vec2 dx = window.getMousePos() - previousMousePos;
-    ball->velocity = dx;
+    math::Vec2 currentMousePos = window.getMousePos();
+    math::Vec2 dx = currentMousePos - dragging.previousMousePos;
+
+    math::Vec2 springDX = (currentMousePos + dragging.idealBallOffset) - ball->position;
+    math::Vec2 springForce = springDX / 6;
+
+    ball->velocity = dx + springForce;
     ball->move();
+
+    dragging.previousMousePos = currentMousePos;
   }
 
 } /* namespace gameplay */

@@ -103,13 +103,13 @@ namespace billiards { namespace entity {
     //      *this         other
 
     math::Vec2 rayToOther = other.position - position;
-    float otherMin = rayToOther.getLength() - other.radius;
+    const float otherMin = rayToOther.getLength() - other.radius;
 
     if (otherMin >= radius)
       return; // no overlap
 
-    float overlap = radius - otherMin; // guaranteed >0
-    float totalMass = mass + other.mass;
+    const float overlap = radius - otherMin; // guaranteed >0
+    const float totalMass = mass + other.mass;
 
     // project out of collision
     math::Vec2 dx(rayToOther);
@@ -128,10 +128,10 @@ namespace billiards { namespace entity {
 
     math::Vec2 dv = other.velocity - velocity;
     rayToOther = other.position - position; // update this since we projected out
-    float axisAngle = rayToOther.getAngle();
-    dv.rotateBy(axisAngle);
+    const float axisAngle = rayToOther.getAngle();
+    dv.rotateBy(-axisAngle); // into center-axis space
 
-    float vPerp = dv.x; // will probably be negative if colliding
+    const float vPerp = dv.x; // will probably be negative if colliding
     if (vPerp >= 0)
       return; // they don't apply any impulse to each other
 
@@ -145,11 +145,11 @@ namespace billiards { namespace entity {
 
     if (table.getStats().friction && dv.y != 0)
     {
-      float vPara = dv.y;
-      float frictionDirection = vPara / std::fabs(vPara);
+      const float vPara = dv.y;
+      const float frictionDirection = vPara / std::fabs(vPara);
 
       // friction can't reverse the direction of vPara, only reduce it to 0
-      float frictionImpulseMagnitude =
+      const float frictionImpulseMagnitude =
           std::min(std::fabs(vPara), std::fabs(vPerp)) *
           table.getStats().friction * totalMass;
 
@@ -157,7 +157,7 @@ namespace billiards { namespace entity {
     }
 
     // prepare dp and preview result
-    dp.rotateBy(axisAngle);
+    dp.rotateBy(axisAngle); // into table space
     dp *= (1 + table.getStats().bounciness) / 2;
     math::Vec2 finalThisVelocity = velocity + dp/mass;
     math::Vec2 finalOtherVelocity = other.velocity - dp/other.mass;
@@ -166,11 +166,57 @@ namespace billiards { namespace entity {
     if (finalDV > dv)
     {
       // TODO: figure out how to limit finalDV to length of dv
-      // current hack works decently:
+
+#define BALL_COLLISION_USES_QUADRATIC
+#ifndef BALL_COLLISION_USES_QUADRATIC
+      // old hack:
       math::Vec2 clampedFinalDV(finalDV);
       clampedFinalDV.scaleTo(dv.getLength());
       dp.scaleTo((dv - clampedFinalDV).getLength() * (mass * other.mass / totalMass));
       dp *= (1 + table.getStats().bounciness) / 2;
+
+      // don't scale down TOO much - collision should at least
+      // stop them from moving toward each other
+      const float minDPPerp = std::fabs(vPerp) * totalMass;
+      dp.rotateBy(-axisAngle); // back into center axis space
+      if (std::abs(dp.x) < minDPPerp)
+        dp *= minDPPerp / std::abs(dp.x);
+      dp.rotateBy(axisAngle); // into table space
+#else
+      // new hack, but with  a l g e b r a  yeet // -----------------
+
+      // quadratic equation algebra thingy stuff
+      {
+        // firstly, make sure we don't divide by zero. Trick:
+        // We'll do this in center-axis space, since in this space
+        // both dp and dv can't be zero in the x component
+        dp.rotateBy(-axisAngle); // into center-axis space
+
+        // solve for how big dv.x should be
+        const float length = finalDV.getLength();
+        const float length_sq = length * length;
+
+        const float slope_dp = dp.y / dp.x;
+        const float slope_dv = dv.y / dv.x;
+
+        const float a = slope_dp * slope_dp + 1;
+        const float b = 2 * dv.x * (slope_dv * slope_dp + 1);
+        const float c = dv.x*dv.x * (slope_dv * slope_dv + 1) - length_sq;
+
+        // quadratic formula lol
+        const float x1 = (-b + std::sqrt(b*b - 4*a*c)) / (2*a);
+        const float x2 = (-b - std::sqrt(b*b - 4*a*c)) / (2*a);
+
+        // now scale dp appropriately
+
+        const float target_dp_x = (dp.x > 0) ? std::max(x1, x2) : std::min(x1, x2);
+        dp *= target_dp_x / dp.x;
+//        const float target_dp_x = (std::abs(x1) > std::abs(x2)) ? x1 : x2;
+//        dp *= std::abs(target_dp_x / dp.x);
+
+        dp.rotateBy(axisAngle); // into table space
+      }
+#endif
     }
 
     // apply impulses
