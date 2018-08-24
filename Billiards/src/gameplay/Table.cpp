@@ -17,7 +17,8 @@ namespace billiards { namespace gameplay {
   : window(window),
     stats { Constants::TABLE_PANE_WIDTH, Constants::TABLE_PANE_HEIGHT, math::Vec2(), 0.2f, 0.5f },
     ballList(),
-    dragging { nullptr, math::Vec2(), math::Vec2() }
+    leftDrag { nullptr, math::Vec2(), math::Vec2() },
+    rightDrag { false, math::Vec2() }
   {
   }
 
@@ -61,47 +62,70 @@ namespace billiards { namespace gameplay {
 
   void Table::handleMouseButton(int button, int action)
   {
-    if (action == GLFW_PRESS && dragging.target == nullptr)
+    if (button == GLFW_MOUSE_BUTTON_LEFT)
     {
-      math::Vec2 clickPos = window.getMousePos();
-      for (entity::Ball* b : ballList)
+      // drag balls around
+      if (action == GLFW_PRESS && leftDrag.target == nullptr)
       {
-        if (b->containsPoint(clickPos))
+        math::Vec2 clickPos = window.getMousePos();
+        for (entity::Ball* b : ballList)
         {
-          dragging.previousMousePos = clickPos;
-          dragging.idealBallOffset = b->position - clickPos;
-          dragging.target = b;
-          b->beingDragged = true;
-          break;
+          if (b->containsPoint(clickPos))
+          {
+            leftDrag.previousMousePos = clickPos;
+            leftDrag.idealBallOffset = b->position - clickPos;
+            leftDrag.target = b;
+            b->beingDragged = true;
+            break;
+          }
         }
       }
-    }
-
-    else if (action == GLFW_RELEASE && dragging.target != nullptr)
+      else if (action == GLFW_RELEASE && leftDrag.target != nullptr)
+      {
+        leftDrag.target->beingDragged = false;
+        leftDrag.target = nullptr;
+      }
+    } // if (button == GLFW_MOUSE_BUTTON_LEFT)
+    else if (button == GLFW_MOUSE_BUTTON_RIGHT)
     {
-      dragging.target->beingDragged = false;
-      dragging.target = nullptr;
+      // control gravity
+      if (action == GLFW_PRESS && !rightDrag.active)
+      {
+        rightDrag.active = true;
+        rightDrag.originalPos = window.getMousePos();
+      }
+      else if (action == GLFW_RELEASE && rightDrag.active)
+      {
+        rightDrag.active = false;
+      }
     }
   }
 
   void Table::checkDrag()
   {
-    if (dragging.target)
-      drag(dragging.target);
+    if (leftDrag.target)
+      drag(leftDrag.target);
+    if (rightDrag.active)
+      drag(stats.gravity);
   }
 
   void Table::drag(entity::Ball* ball)
   {
     math::Vec2 currentMousePos = window.getMousePos();
-    math::Vec2 dx = currentMousePos - dragging.previousMousePos;
+    math::Vec2 dx = currentMousePos - leftDrag.previousMousePos;
 
-    math::Vec2 springDX = (currentMousePos + dragging.idealBallOffset) - ball->position;
+    math::Vec2 springDX = (currentMousePos + leftDrag.idealBallOffset) - ball->position;
     math::Vec2 springForce = springDX / 6;
 
     ball->velocity = dx + springForce;
     ball->move();
 
-    dragging.previousMousePos = currentMousePos;
+    leftDrag.previousMousePos = currentMousePos;
+  }
+
+  void Table::drag(math::Vec2& target, float sensitivity)
+  {
+    target = (window.getMousePos() - rightDrag.originalPos) * sensitivity;
   }
 
 } /* namespace gameplay */

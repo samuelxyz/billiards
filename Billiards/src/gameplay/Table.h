@@ -48,7 +48,13 @@ namespace billiards { namespace gameplay {
       {
           entity::Ball* target;
           math::Vec2 previousMousePos, idealBallOffset;
-      } dragging;
+      } leftDrag;
+
+      struct
+      {
+          bool active;
+          math::Vec2 originalPos;
+      } rightDrag;
 
     public:
       Table(const graphics::Window& window);
@@ -69,6 +75,7 @@ namespace billiards { namespace gameplay {
     private:
       void checkDrag();
       void drag(entity::Ball* ball);
+      void drag(math::Vec2& target, float sensitivity = 0.0000001);
   };
 
 } /* namespace gameplay */

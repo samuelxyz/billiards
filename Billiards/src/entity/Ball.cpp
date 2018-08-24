@@ -70,8 +70,8 @@ namespace billiards { namespace entity {
     // rolling friction
     if (!velocity.isZero())
     {
-      // friction impulse is proportional to mass so
-      // we'll just handle delta-v instead of bothering
+      // friction impulse is proportional to mass so we'll
+      // just handle delta-v instead of bothering with impulse
       math::Vec2 frictionDV(-velocity);
       frictionDV.scaleTo(table.getStats().friction *
           ROLLING_FRICTION_RATIO);

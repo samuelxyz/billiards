@@ -116,7 +116,7 @@ namespace billiards { namespace graphics {
   {
     Window* window = getWindow(glfwWindow);
 
-    if (button == GLFW_MOUSE_BUTTON_LEFT && window->table)
+    if (window->table)
       window->table->handleMouseButton(button, action);
   }
 
